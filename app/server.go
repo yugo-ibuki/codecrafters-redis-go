@@ -21,11 +21,17 @@ func main() {
 	}
 
 	defer conn.Close()
-	buffer := make([]byte, 1024)
-	if _, err := conn.Read(buffer); err != nil {
-		fmt.Println("Error reading from buffer: ", err.Error())
-		os.Exit(1)
-	}
 
-	conn.Write([]byte("+PONG\r\n"))
+	for {
+		buffer := make([]byte, 1024)
+		if _, err := conn.Read(buffer); err != nil {
+			fmt.Println("Error reading from buffer: ", err.Error())
+			break
+		}
+		_, err := conn.Write([]byte("+PONG\r\n"))
+		if err != nil {
+			fmt.Println(err.Error())
+			break
+		}
+	}
 }
